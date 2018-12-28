@@ -1,5 +1,6 @@
-class ClassHelper
+# frozen_string_literal: true
 
+class ClassHelper
   def self.ancestors(object)
     object.class.ancestors
   end

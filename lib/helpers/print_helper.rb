@@ -1,8 +1,9 @@
+# frozen_string_literal: true
+
 require 'pp'
 require 'ap'
 
 class PrintHelper
-
   def self.pretty(object, ancestor = false)
     if ancestor
       mine = ClassHelper.ancestors_gem(object)
@@ -32,5 +33,4 @@ class PrintHelper
   def self.awesome_obj(object)
     ap object
   end
-
 end

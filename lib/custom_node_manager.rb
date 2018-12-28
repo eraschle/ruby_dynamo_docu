@@ -1,49 +1,50 @@
-require_relative 'controllers/import_controller'
-require_relative 'controllers/node_controller'
-require_relative 'custom_python_node'
+# frozen_string_literal: true
 
+require_relative './dao/data_source'
+require_relative './dao/dynamo_dao'
+require_relative './repository'
+require_relative './builder'
+require_relative './custom_python_node'
+
+# Manager to import custom nodes
 class CustomNodeManager
+  @namespace_name = 'NamespaceResolutionMap'
+  @nodes_name = 'Elements'
 
-  attr_reader :import_control, :nodes_control
-
-  def initialize(import = ImportController.new,
-                 node = NodeController.new,
-                 repository = DynamoRepo.new)
-    @source_repo = repository
-    @import_control = import
-    @import_control.repository = @source_repo
-    @nodes_control = node
-    @nodes_control.repository = @source_repo
-    @builder = Builder.new @source_repo
+  def initialize(data_source = DataSource.new)
+    @data_source = data_source
+    @dao = DynamoDao.new @data_source
+    @repo = Repository.new @dao
+    @builder = Builder.new @repo
   end
 
-  def import(file_path)
-    @source_repo.open_file file_path
-    node_name = FileHelper.filename(file_path)
-    node = CustomPythonNode.new node_name, file_path
-    node.imports = create_imports(@import_control)
-    node.nodes = create_nodes(@nodes_control)
+  def create(file_path)
+    @data_source.connect file_path
+    open_file file_path
+    node = create_custom_node file_path
+    node.namespaces = import @namespace_name
+    node.nodes = import @nodes_name
     node
-  end
-
-  def not_managed_sources
-    @nodes_control.not_managed.merge(@import_control.not_managed)
   end
 
   private
 
-  def create_imports(controller)
-    source_parent = @source_repo.element_by_name(controller.parent)
-    @source_repo.children(source_parent, controller).collect do |ele|
-      @builder.build ele, controller
-    end
+  def create_custom_node(file_path)
+    node_name = File.basename file_path
+    CustomPythonNode.new node_name, file_path
   end
 
-  def create_nodes(controller)
-    parent = @source_repo.element_by_name(controller.parent)
-    @source_repo.children(parent, controller).collect do |ele|
-      @builder.build ele, controller
+  def import(child_name)
+    imports = []
+    child = @repo.root_child_by child_name
+    @repo.children(child).each do |ele|
+      model = @builder.build ele
+      imports << model unless model.nil?
     end
+    imports
   end
 
+  def import_nodes
+    []
+  end
 end

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require_relative 'lib/documentation'
 require_relative 'lib/helpers/print_helper'
 require_relative 'lib/models/nodes/node'
@@ -10,11 +12,11 @@ require_relative 'lib/models/nodes/node'
 # import node
 # C:/Dev/workspace/Dynamo/Libraries/Revit2017/packages/AmWa/dyf
 
-documentation = Documentation::DynamoDocumentation.new
+documentation = Documentation::Dynamo.new
 # path = 'C:/Dev/workspace/Dynamo/Libraries/Revit2017/packages/AmWa/dyf/DocumentFamilySymbolSearchReplace.dyf'
 # node = documentation.custom_nodes.import_file(path)
 path = 'C:/Dev/workspace/Dynamo/Libraries/Revit2017/packages'
-nodes = documentation.custom_nodes.import_dir(path)
+nodes = documentation.import_dir(path)
 file_count = 0
 nodes.each do |custom_node|
   file_count += 1

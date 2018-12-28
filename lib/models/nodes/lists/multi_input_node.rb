@@ -1,8 +1,9 @@
+# frozen_string_literal: true
+
 require_relative '../node'
 require_relative '../../../helpers/parse_helper'
 
 class MultiInputNode < Node
-
   attr_reader :input_count
 
   def input_count=(count)

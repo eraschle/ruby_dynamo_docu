@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # represents a not mapped dynamo not node
 class NotMapped
   def initialize(xml_type)

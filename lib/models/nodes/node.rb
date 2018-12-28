@@ -1,8 +1,9 @@
+# frozen_string_literal: true
+
 require_relative '../../helpers/parse_helper'
 
 # common information of a dynamo node
 class Node
-
   attr_accessor :uid, :title, :xml_type, :lacing
 
   def initialize
