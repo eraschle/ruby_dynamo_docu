@@ -1,7 +1,6 @@
 # frozen_string_literal: true
 
-require 'REXML/document'
-require 'REXML/elements'
+require 'rexml/document'
 
 # Represents the connection to the data source
 class DataSource

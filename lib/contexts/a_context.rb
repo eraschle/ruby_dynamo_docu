@@ -1,5 +1,6 @@
 # frozen_string_literal: true
 
+require_relative '../providers/attribute_provider'
 require_relative '../container/equals_finder'
 
 # A general context of dynamo source
@@ -15,22 +16,26 @@ class AContext
   end
 
   def model_exist?
-    not_nil? @model
+    !@model.nil?
   end
 
   def source_exist?
-    not_nil? @source
+    !@source.nil?
   end
 
   def of_source?(item)
     @finder.of_source? item
   end
 
-  def add_provider(model, provider)
-    msg = '2nd parameter must be a provider'
-    raise msg unless provider.is_a? AProvider
+  def add_provider(model_attr, provider)
+    msg = '2nd parameter must be a attribute provider'
+    raise msg unless provider.is_a? AttributeProvider
 
-    @attributes[model.to_sym] = provider
+    @attributes[model_attr.to_sym] = provider
+  end
+
+  def get_provider(model_attr)
+    @attributes[model_attr.to_sym]
   end
 
   def model_attributes
@@ -39,16 +44,6 @@ class AContext
 
   def provider_exist?(model_attr)
     false if model_attr.nil?
-    @attributes.key? model_attr
-  end
-
-  def get_provider(model_attr)
-    @attributes[model_attr]
-  end
-
-  protected
-
-  def not_nil?(item)
-    !item.nil?
+    @attributes.key? model_attr.to_sym
   end
 end

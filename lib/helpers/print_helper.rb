@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'pp'
-require 'ap'
+require 'awesome_print'
 
 class PrintHelper
   def self.pretty(object, ancestor = false)

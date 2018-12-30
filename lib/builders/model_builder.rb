@@ -4,21 +4,23 @@ require 'require_all'
 require_all 'lib/models/nodes'
 require_all 'lib/models/nodes/lists'
 require_all 'lib/models/common'
-require_relative 'helpers/class_helper'
-require_relative './factories/context_factory'
+require_relative '../helpers/class_helper'
+require_relative '../factories/context_factory'
 
 # Builds a new object an sets all attributes values
-class Builder
+class ModelBuilder
   def initialize(repo)
     @repo = repo
   end
 
   def build(source)
     context = ContextFactory.by_source source
+    return nil if context.nil?
+
     model = new_entity context
     apply_attributes model, source, context
-  rescue NoMethodError => e
-    raise "build\n#{source}\n#{context.source}\n#{e.message}"
+  # rescue NoMethodError => e
+  #  raise "build\n#{source}\n#{context.source}\n#{e.message}"
   end
 
   private

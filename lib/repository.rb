@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-require_relative './dao/dynamo_dao'
+require_relative 'dao/dynamo_dao'
 
 # Repository to access custom node sources
 class Repository
@@ -20,9 +20,8 @@ class Repository
     @dao.source_attribute source, attribute
   end
 
-  def child_attribute_value(source, child_name, attribute)
-    src_child = @dao.child_by_name source, child_name
-    @dao.source_attribute src_child, attribute
+  def child(source, child_name)
+    @dao.child_by_name source, child_name
   end
 
   def source_element?(source)

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class CustomPythonNode
-  attr_accessor :name, :file_path, :imports, :nodes
+  attr_accessor :name, :file_path, :namespaces, :nodes
 
   def initialize(name, path)
     @name = name

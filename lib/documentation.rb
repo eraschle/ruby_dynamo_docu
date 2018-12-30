@@ -9,16 +9,19 @@ module Documentation
   end
   # Your code goes here...
 
+  # Main class for creating dynamo documentation
   class Dynamo
-    def initializon
+    def initialize
       @manager = CustomNodeManager.new
-      @errors = []
+      @errors = {}
     end
 
     def import_file(file_path)
       @manager.create(file_path)
-    rescue StandardError => e
-      @errors[file_path] = e.to_s
+    # rescue StandardError => e
+    #   @errors[file_path] = e.backtrace
+    #   puts e.backtrace
+    #   raise
     end
 
     def import_dir(dir_path, extension = 'dyf')

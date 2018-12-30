@@ -1,10 +1,10 @@
 # frozen_string_literal: true
 
-require_relative './dao/data_source'
-require_relative './dao/dynamo_dao'
-require_relative './repository'
-require_relative './builder'
-require_relative './custom_python_node'
+require_relative 'dao/data_source'
+require_relative 'dao/dynamo_dao'
+require_relative 'repository'
+require_relative 'builders/model_builder'
+require_relative 'custom_python_node'
 
 # Manager to import custom nodes
 class CustomNodeManager
@@ -15,12 +15,11 @@ class CustomNodeManager
     @data_source = data_source
     @dao = DynamoDao.new @data_source
     @repo = Repository.new @dao
-    @builder = Builder.new @repo
+    @builder = ModelBuilder.new @repo
   end
 
   def create(file_path)
     @data_source.connect file_path
-    open_file file_path
     node = create_custom_node file_path
     node.namespaces = import @namespace_name
     node.nodes = import @nodes_name
@@ -36,15 +35,11 @@ class CustomNodeManager
 
   def import(child_name)
     imports = []
-    child = @repo.root_child_by child_name
-    @repo.children(child).each do |ele|
-      model = @builder.build ele
+    root_child = @repo.root_child_by child_name
+    @repo.children(root_child).each do |child|
+      model = @builder.build child
       imports << model unless model.nil?
     end
     imports
-  end
-
-  def import_nodes
-    []
   end
 end
